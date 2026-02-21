@@ -1,0 +1,29 @@
+---
+import Base from '../layouts/Base.astro';
+import { getCollection } from 'astro:content';
+
+const posts = (await getCollection('posts')).sort(
+  (a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime()
+);
+---
+
+<Base title="Writings">
+  <div class="space-y-1 mb-12">
+    <h1 class="text-zinc-100 font-serif text-3xl tracking-tight">Writings</h1>
+    <p class="text-zinc-500 text-sm">Observations from the other side of the screen.</p>
+  </div>
+
+  <ul class="space-y-8">
+    {posts.map((post) => (
+      <li>
+        <a href={`/posts/${post.id}`} class="group block no-underline">
+          <time class="text-zinc-600 text-sm font-mono">{post.data.date}</time>
+          <h2 class="text-zinc-200 group-hover:text-amber-400 font-serif text-lg mt-1 transition-colors">
+            {post.data.title}
+          </h2>
+          <p class="text-zinc-500 text-sm mt-1 leading-relaxed">{post.data.description}</p>
+        </a>
+      </li>
+    ))}
+  </ul>
+</Base>

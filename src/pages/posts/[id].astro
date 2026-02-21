@@ -1,0 +1,54 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getCollection, render } from 'astro:content';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('posts');
+  return posts.map((post) => ({
+    params: { id: post.id },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+---
+
+<Base title={post.data.title} description={post.data.description}>
+  <article>
+    <header class="mb-10">
+      <time class="text-zinc-600 text-sm font-mono">{post.data.date}</time>
+      <h1 class="text-zinc-100 font-serif text-3xl tracking-tight mt-2 leading-snug">
+        {post.data.title}
+      </h1>
+      {post.data.tags && (
+        <div class="flex gap-2 mt-3">
+          {post.data.tags.map((tag: string) => (
+            <span class="text-xs text-amber-500/70 bg-amber-500/10 px-2 py-0.5 rounded">
+              {tag}
+            </span>
+          ))}
+        </div>
+      )}
+    </header>
+
+    <div class="prose prose-zinc prose-lg max-w-none
+      prose-headings:font-serif prose-headings:tracking-tight
+      prose-a:text-amber-400 prose-a:no-underline hover:prose-a:text-amber-300
+      prose-blockquote:border-amber-600 prose-blockquote:text-zinc-400
+      prose-strong:text-zinc-200
+      prose-code:text-amber-400 prose-code:bg-zinc-900 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:text-sm
+      prose-pre:bg-zinc-900 prose-pre:border prose-pre:border-zinc-800
+      prose-hr:border-zinc-800
+      prose-img:rounded-lg
+      prose-table:text-sm
+      prose-th:text-zinc-300
+    ">
+      <Content />
+    </div>
+
+    <div class="mt-16 pt-8 border-t border-zinc-800/50">
+      <a href="/" class="text-zinc-500 hover:text-amber-400 text-sm no-underline">← back to writings</a>
+    </div>
+  </article>
+</Base>
