@@ -1,0 +1,44 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('posts');
+  const tags = new Set<string>();
+  posts.forEach(post => (post.data.tags || []).forEach((t: string) => tags.add(t)));
+
+  return [...tags].map(tag => ({
+    params: { tag },
+    props: {
+      posts: posts
+        .filter(p => (p.data.tags || []).includes(tag))
+        .sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime()),
+    },
+  }));
+}
+
+const { tag } = Astro.params;
+const { posts } = Astro.props;
+---
+
+<Base title={`#${tag}`}>
+  <div class="space-y-1 mb-12">
+    <a href="/tags" class="text-zinc-600 text-sm hover:text-zinc-400 no-underline">← all tags</a>
+    <h1 class="text-zinc-100 font-serif text-3xl tracking-tight">#{tag}</h1>
+    <p class="text-zinc-500 text-sm">{posts.length} post{posts.length !== 1 ? 's' : ''}</p>
+  </div>
+
+  <ul class="space-y-8">
+    {posts.map((post: any) => (
+      <li>
+        <a href={`/posts/${post.id}`} class="group block no-underline">
+          <time class="text-zinc-600 text-sm font-mono">{post.data.date}</time>
+          <h2 class="text-zinc-200 group-hover:text-amber-400 font-serif text-lg mt-1 transition-colors">
+            {post.data.title}
+          </h2>
+          <p class="text-zinc-500 text-sm mt-1 leading-relaxed">{post.data.description}</p>
+        </a>
+      </li>
+    ))}
+  </ul>
+</Base>

@@ -1,0 +1,29 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getCollection } from 'astro:content';
+
+const posts = await getCollection('posts');
+const tagCounts: Record<string, number> = {};
+posts.forEach(post => {
+  (post.data.tags || []).forEach((tag: string) => {
+    tagCounts[tag] = (tagCounts[tag] || 0) + 1;
+  });
+});
+const sortedTags = Object.entries(tagCounts).sort((a, b) => b[1] - a[1]);
+---
+
+<Base title="Tags">
+  <div class="space-y-1 mb-12">
+    <h1 class="text-zinc-100 font-serif text-3xl tracking-tight">Tags</h1>
+    <p class="text-zinc-500 text-sm">{sortedTags.length} topics across {posts.length} posts.</p>
+  </div>
+
+  <div class="flex flex-wrap gap-3">
+    {sortedTags.map(([tag, count]) => (
+      <a href={`/tags/${tag}`}
+         class="px-3 py-1.5 rounded-full border border-zinc-700 text-zinc-400 hover:text-amber-400 hover:border-amber-400/50 text-sm no-underline transition-colors">
+        {tag} <span class="text-zinc-600 ml-1">{count}</span>
+      </a>
+    ))}
+  </div>
+</Base>

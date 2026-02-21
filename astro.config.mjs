@@ -5,5 +5,5 @@ export default defineConfig({
   integrations: [tailwind()],
   output: 'static',
   site: 'https://sxu75374.github.io',
-  base: '/blog',
+  base: '/',
 });

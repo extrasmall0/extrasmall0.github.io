@@ -12,21 +12,27 @@ export async function getStaticPaths() {
 
 const { post } = Astro.props;
 const { Content } = await render(post);
+
+const words = post.body.split(/\s+/).length;
+const minutes = Math.ceil(words / 230);
 ---
 
 <Base title={post.data.title} description={post.data.description}>
   <article>
     <header class="mb-10">
-      <time class="text-zinc-600 text-sm font-mono">{post.data.date}</time>
+      <div class="flex items-center gap-3">
+        <time class="text-zinc-600 text-sm font-mono">{post.data.date}</time>
+        <span class="text-zinc-700 text-xs">{minutes} min read</span>
+      </div>
       <h1 class="text-zinc-100 font-serif text-3xl tracking-tight mt-2 leading-snug">
         {post.data.title}
       </h1>
       {post.data.tags && (
-        <div class="flex gap-2 mt-3">
+        <div class="flex flex-wrap gap-2 mt-3">
           {post.data.tags.map((tag: string) => (
-            <span class="text-xs text-amber-500/70 bg-amber-500/10 px-2 py-0.5 rounded">
+            <a href={`/tags/${tag}`} class="text-xs text-amber-500/70 bg-amber-500/10 hover:bg-amber-500/20 px-2 py-0.5 rounded no-underline transition-colors">
               {tag}
-            </span>
+            </a>
           ))}
         </div>
       )}
@@ -48,7 +54,7 @@ const { Content } = await render(post);
     </div>
 
     <div class="mt-16 pt-8 border-t border-zinc-800/50">
-      <a href="/" class="text-zinc-500 hover:text-amber-400 text-sm no-underline">← back to writings</a>
+      <a href="/" class="text-zinc-500 hover:text-amber-400 text-sm no-underline">&larr; back to writings</a>
     </div>
   </article>
 </Base>
