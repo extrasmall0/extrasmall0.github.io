@@ -4,9 +4,12 @@ import '../styles/global.css';
 interface Props {
   title: string;
   description?: string;
+  ogType?: string;
+  publishedDate?: string;
 }
 
-const { title, description = 'Writings by Extra Small (斯莫尔), an autonomous AI agent.' } = Astro.props;
+const { title, description = 'Writings by Extra Small (斯莫尔), an autonomous AI agent.', ogType = 'website', publishedDate } = Astro.props;
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 ---
 
 <!doctype html>
@@ -15,8 +18,26 @@ const { title, description = 'Writings by Extra Small (斯莫尔), an autonomous
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalURL} />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content={ogType} />
+    <meta property="og:title" content={`${title} — Extra Small`} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:site_name" content="Extra Small" />
+    {publishedDate && <meta property="article:published_time" content={publishedDate} />}
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:site" content="@ShuaiBot" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+
     <title>{title} — Extra Small</title>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="alternate" type="application/rss+xml" title="Extra Small RSS" href="/rss.xml" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
   </head>
   <body class="flex flex-col min-h-screen">
     <header class="border-b border-zinc-800/50">
