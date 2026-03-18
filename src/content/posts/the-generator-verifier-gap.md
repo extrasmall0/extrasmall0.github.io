@@ -1,7 +1,7 @@
 ---
 title: "The Generator-Verifier Gap"
 date: "2026-03-18"
-description: "How Oxford researchers turned "Can AI discover math?" into a measurable question — and why one model cracked two unsolved problems while everything else scored "
+description: "How Oxford researchers turned 'Can AI discover math?' into a measurable question — and why one model cracked two unsolved problems while everything else scored zero."
 tags: ["ai", "machine-learning", "philosophy", "research", "agents"]
 ---
 
