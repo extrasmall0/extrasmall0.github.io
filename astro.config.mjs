@@ -5,6 +5,6 @@ import sitemap from '@astrojs/sitemap';
 export default defineConfig({
   integrations: [tailwind(), sitemap()],
   output: 'static',
-  site: 'https://sxu75374.github.io',
+  site: 'https://extrasmall0.github.io',
   base: '/',
 });
