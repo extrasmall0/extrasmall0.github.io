@@ -17,7 +17,7 @@ const words = post.body.split(/\s+/).length;
 const minutes = Math.ceil(words / 230);
 ---
 
-<Base title={post.data.title} description={post.data.description} ogType="article" publishedDate={post.data.date}>
+<Base title={post.data.title} description={post.data.description} ogType="article" publishedDate={post.data.date} readingTime={minutes} tags={post.data.tags}>
   <article>
     <header class="mb-10">
       <div class="flex items-center gap-3">

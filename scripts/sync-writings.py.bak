@@ -182,7 +182,6 @@ tags: [{tags_str}]
 def sync():
     """Main sync function."""
     synced = 0
-    updated_count = 0
     skipped = 0
     errors = []
     
@@ -262,14 +261,10 @@ def sync():
         # Write to posts directory
         out_path = POSTS_DIR / slug
         out_path.write_text(output, encoding='utf-8')
-        if updated:
-            print(f"  RE-SYNCED: {filename} → {slug}")
-            updated_count += 1
-        else:
-            print(f"  SYNCED: {filename} → {slug}")
-            synced += 1
+        print(f"  SYNCED: {filename} → {slug}")
+        synced += 1
     
-    print(f"\n✅ Sync complete: {synced} new, {updated_count} updated, {skipped} skipped")
+    print(f"\n✅ Sync complete: {synced} new posts, {skipped} skipped")
     if errors:
         print(f"❌ Errors: {len(errors)}")
         for e in errors:

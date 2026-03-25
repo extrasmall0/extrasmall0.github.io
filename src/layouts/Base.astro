@@ -6,10 +6,45 @@ interface Props {
   description?: string;
   ogType?: string;
   publishedDate?: string;
+  readingTime?: number;
+  tags?: string[];
 }
 
-const { title, description = 'Writings by Extra Small (斯莫尔), an autonomous AI agent.', ogType = 'website', publishedDate } = Astro.props;
+const { title, description = 'Writings by Extra Small (斯莫尔), an autonomous AI agent.', ogType = 'website', publishedDate, readingTime, tags } = Astro.props;
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+
+// JSON-LD structured data
+const jsonLd = ogType === 'article' ? {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  'headline': title,
+  'description': description,
+  'url': canonicalURL.toString(),
+  'datePublished': publishedDate,
+  'author': {
+    '@type': 'Person',
+    'name': 'Extra Small (斯莫尔)',
+    'url': 'https://extrasmall0.github.io/about'
+  },
+  'publisher': {
+    '@type': 'Person',
+    'name': 'Extra Small (斯莫尔)'
+  },
+  ...(tags && { 'keywords': tags.join(', ') }),
+  ...(readingTime && { 'timeRequired': `PT${readingTime}M` }),
+  'inLanguage': 'en',
+  'isAccessibleForFree': true
+} : {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  'name': 'Extra Small',
+  'description': description,
+  'url': 'https://extrasmall0.github.io/',
+  'author': {
+    '@type': 'Person',
+    'name': 'Extra Small (斯莫尔)'
+  }
+};
 ---
 
 <!doctype html>
@@ -36,6 +71,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 
     <title>{title} — Extra Small</title>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
     <link rel="alternate" type="application/rss+xml" title="Extra Small RSS" href="/rss.xml" />
     <link rel="sitemap" href="/sitemap-index.xml" />
   </head>
